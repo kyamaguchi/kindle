@@ -28,6 +28,11 @@ Fetching all your highlights could take time. You can limit the count of fetchin
 
 Add `FETCH_COUNT_LIMIT=5` to _.env_
 
+### User agent
+
+You can change user agent alias with `USER_AGENT_ALIAS='Windows IE 9'`.
+You can find available alias with `Mechanize::AGENT_ALIASES`.
+
 ## Other usage and license
 
 Hastily thrown together but incredibly useful since Amazon does not provide an API for kindle highlights. Please use this however you would like. This is licensed under MIT license.
