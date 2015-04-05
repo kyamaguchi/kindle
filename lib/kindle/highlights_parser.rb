@@ -84,12 +84,14 @@ module Kindle
       asins_string    = asins.collect { |asin| "used_asins[]=#{asin}" } * '&'
       upcoming_string = state[:current_upcoming].map { |l| "upcoming_asins[]=#{l}" } * '&'
       url = "#{KINDLE_HTTPS_URL}/your_highlights/next_book?#{asins_string}&current_offset=#{state[:current_offset]}&#{upcoming_string}"
+      puts "Getting: #{url}"
       ajax_headers = { 'X-Requested-With' => 'XMLHttpRequest', 'Host' => "kindle.#{KINDLE_DOMAIN}" }
       page = agent.get(url,[],"#{KINDLE_HTTPS_URL}/your_highlight", ajax_headers)
       increment_fetch_count
 
       initialize_state_with_page state, page
 
+      puts "Fetched: #{state[:title]}"
       page
     end
 
@@ -103,11 +105,13 @@ module Kindle
     end
 
     def increment_fetch_count
+      puts "@fetch_count #{@fetch_count} -> #{@fetch_count+1}"
       @fetch_count += 1
     end
 
     def reach_fetch_count_limit?
       return false unless ENV['FETCH_COUNT_LIMIT']
+      puts "reach_fetch_count_limit? #{@fetch_count}"
       @fetch_count >= ENV['FETCH_COUNT_LIMIT'].to_i
     end
 
