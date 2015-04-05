@@ -1,5 +1,6 @@
 require 'bundler/setup'
 Bundler.setup
+require 'byebug'
 require 'vcr'
 require 'active_support/all'
 
