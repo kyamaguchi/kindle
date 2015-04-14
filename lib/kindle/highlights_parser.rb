@@ -97,7 +97,9 @@ module Kindle
       highlight_id = hl.xpath('//*[@id="annotation_id"]').first["value"]
       highlight    = (hl/".highlight").text
       asin         = (hl/".asin").text
-      Highlight.new(highlight_id, highlight, asin, state[:title], state[:author])
+      note_id      = (hl/".editNote .annotation_id").text
+      note         = (hl/".editNote .noteContent").text
+      Highlight.new(highlight_id, highlight, asin, state[:title], state[:author], note_id, note)
     end
 
     def increment_fetch_count

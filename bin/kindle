@@ -17,7 +17,7 @@ begin
   highlights = k.fetch_highlights # TODO: Pass in something to bide our time
   # TODO: Multiple output formats. CSV, JSON, Pretty, HTML?
   highlights.each do |highlight|
-    puts "#{highlight.asin};#{highlight.title};#{highlight.author};#{highlight.highlight}"
+    puts "#{highlight.asin};#{highlight.title};#{highlight.author};#{highlight.highlight}#{highlight.note.length > 0 ? '[Note: '+highlight.note+']' : ''}"
   end
 rescue => ex
   # TODO Actually handle this!
