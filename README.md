@@ -16,6 +16,8 @@ This little application will fetch a list of all your highlights from your kindl
 
 And then, change your username `AMAZON_USERNAME` in _.env_
 
+You could also set `AMAZON_PASSWORD`.
+
 ### Fetch highlights of different domain
 
 Add `KINDLE_DOMAIN=amazon.co.jp` to _.env_ (Example: Japanese site)
