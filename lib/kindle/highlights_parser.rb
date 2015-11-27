@@ -94,7 +94,7 @@ module Kindle
     end
 
     def parse_highlight(hl, state)
-      highlight_id = hl.xpath('//*[@id="annotation_id"]').first["value"]
+      highlight_id = (hl/"#annotation_id").last["value"]
       highlight    = (hl/".highlight").text
       asin         = (hl/".asin").text
       note_id      = (hl/".editNote .annotation_id").text
