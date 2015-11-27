@@ -97,9 +97,10 @@ module Kindle
       highlight_id = (hl/"#annotation_id").last["value"]
       highlight    = (hl/".highlight").text
       asin         = (hl/".asin").text
+      location     = (hl/".linkOut").first['href'][/&location=(\d+)\z/, 1] # kindle://book?action=open&asin=XXX&location=YYY
       note_id      = (hl/".editNote .annotation_id").text
       note         = (hl/".editNote .noteContent").text
-      Highlight.new(highlight_id, highlight, asin, state[:title], state[:author], note_id, note)
+      Highlight.new(highlight_id, highlight, asin, location, state[:title], state[:author], note_id, note)
     end
 
     def increment_fetch_count
