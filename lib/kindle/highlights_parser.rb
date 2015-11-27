@@ -75,7 +75,7 @@ module Kindle
       return if (page/".yourHighlight").length == 0
       state[:current_upcoming] = (page/".upcoming").first.text.split(',') rescue []
       state[:title] = (page/".yourHighlightsHeader .title").text.to_s.strip
-      state[:author] = (page/".yourHighlightsHeader .author").text.to_s.strip
+      state[:author] = (page/".yourHighlightsHeader .author").text.to_s.strip.gsub(/\Aby /, '')
       state[:current_offset] = ((page/".yourHighlightsHeader").collect{|h| h.attributes['id'].value }).first.split('_').last
     end
 
