@@ -77,6 +77,7 @@ module Kindle
       state[:title] = (page/".yourHighlightsHeader .title").text.to_s.strip
       state[:author] = (page/".yourHighlightsHeader .author").text.to_s.strip.gsub(/\Aby /, '')
       state[:current_offset] = ((page/".yourHighlightsHeader").collect{|h| h.attributes['id'].value }).first.split('_').last
+      state[:last_annotated_on] = Date.parse (page/".lastHighlighted").text[/Last annotated on (.*)/, 1]
     end
 
     def get_the_next_page(state, previously_extracted_highlights = [])
@@ -102,7 +103,7 @@ module Kindle
       location     = (hl/".linkOut").first['href'][/&location=(\d+)\z/, 1] # kindle://book?action=open&asin=XXX&location=YYY
       note_id      = (hl/".editNote .annotation_id").text
       note         = (hl/".editNote .noteContent").text
-      Highlight.new(highlight_id, highlight, asin, location, state[:title], state[:author], note_id, note)
+      Highlight.new(highlight_id, highlight, asin, location, state[:title], state[:author], state[:last_annotated_on], note_id, note)
     end
 
     def increment_fetch_count
