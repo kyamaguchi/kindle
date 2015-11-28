@@ -1,3 +1,4 @@
+require 'byebug'
 require 'dotenv'
 Dotenv.load
 require 'nokogiri'
