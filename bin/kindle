@@ -16,8 +16,18 @@ begin
   puts "Getting your kindle highlights..."
   highlights = k.fetch_highlights # TODO: Pass in something to bide our time
   # TODO: Multiple output formats. CSV, JSON, Pretty, HTML?
-  highlights.each do |highlight|
-    puts "#{highlight.asin};#{highlight.title};#{highlight.author};#{highlight.highlight}#{highlight.note.length > 0 ? '[Note: '+highlight.note+']' : ''}"
+  highlights.each do |h|
+    line = %w[
+      asin
+      title
+      author
+      last_annotated_on
+      id
+      location
+      highlight
+    ].map{|f| h.send(f).to_s }.join(';')
+    line += ";[Note(#{h.note_id}):#{h.note.gsub(/\s/, ' ')}]" if h.note.length > 0
+    puts line
   end
 rescue => ex
   # TODO Actually handle this!
