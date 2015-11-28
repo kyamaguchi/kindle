@@ -97,8 +97,12 @@ module Kindle
     end
 
     def parse_highlight(hl, state)
-      highlight_id = (hl/"#annotation_id").last["value"]
-      highlight    = (hl/".highlight").text
+      highlight_id = (hl/"#annotation_id").last["value"] rescue 'note_only'
+      if highlight_id == 'note_only'
+        highlight    = (hl/".context").text
+      else
+        highlight    = (hl/".highlight").text
+      end
       asin         = (hl/".asin").text
       location     = (hl/".linkOut").first['href'][/&location=(\d+)\z/, 1] # kindle://book?action=open&asin=XXX&location=YYY
       note_id      = (hl/".editNote .annotation_id").text
