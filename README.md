@@ -4,11 +4,12 @@ This little application will fetch a list of all your highlights from your kindl
 
 ## Installation
 
-    gem install kindle
+    git clone https://github.com/kyamaguchi/kindle
 
 ## Usage
 
-    kindle # Will prompt you for your login info. Don't worry it isn't stored.
+    cd kindle
+    ./bin/kindle
 
 ### Preserve Amazon username on your local machine
 
@@ -35,8 +36,7 @@ You can find available alias with `Mechanize::AGENT_ALIASES`.
 
 ## Other usage and license
 
-Hastily thrown together but incredibly useful since Amazon does not provide an API for kindle highlights. Please use this however you would like. This is licensed under MIT license.
-
+MIT
 
 © 2012 Matt Petty
 [@lodestone](http://about.me/lodestone)
