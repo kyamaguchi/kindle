@@ -13,7 +13,9 @@ module Kindle
   class Highlights
 
     def initialize(options = {})
-      options.each { |k,v| instance_variable_set("@#{k}", v) }
+      @login = options[:convert] ? Kindle::Converter.decode(options[:login]) : options[:login]
+      @password = options[:convert] ? Kindle::Converter.decode(options[:password]) : options[:password]
+      raise "login or password is missing" unless @login || @password
     end
 
     def fetch_highlights
