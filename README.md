@@ -24,6 +24,8 @@ You could also set `AMAZON_PASSWORD`.
 Run `./bin/convert_credentials` and paste the output to _env_.
 (`AMAZON_USERNAME_CODE` and `AMAZON_PASSWORD_CODE`)
 
+You can change the salt with `AMAZON_CODE_SALT` if you like.
+
 ### Fetch highlights of different domain
 
 Add `KINDLE_DOMAIN=amazon.co.jp` to _.env_ (Example: Japanese site)
