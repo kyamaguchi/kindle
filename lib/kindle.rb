@@ -3,6 +3,7 @@ require 'dotenv'
 Dotenv.load
 require 'nokogiri'
 require 'mechanize'
+require_relative 'kindle/converter'
 require_relative 'kindle/highlight'
 require_relative 'kindle/highlights_parser'
 
