@@ -9,15 +9,20 @@ This little application will fetch a list of all your highlights from your kindl
 ## Usage
 
     cd kindle
+    cp .env.sample .env
+    ./bin/convert_credentials
+    vi .env
     ./bin/kindle
 
 ### Preserve Amazon username on your local machine
 
-    cp .env.sample .env
-
-And then, change your username `AMAZON_USERNAME` in _.env_
-
+You can keep username and password on your local not to type everytime.
+You can set `AMAZON_USERNAME` in _.env_.
 You could also set `AMAZON_PASSWORD`.
+
+[Recommended] Or you can convert them to protect them against shoulder surfing.
+Run `./bin/convert_credentials` and paste the output to _env_.
+(`AMAZON_USERNAME_CODE` and `AMAZON_PASSWORD_CODE`)
 
 ### Fetch highlights of different domain
 
