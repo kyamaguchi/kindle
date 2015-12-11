@@ -41,6 +41,12 @@ Add `FETCH_COUNT_LIMIT=5` to _.env_
 You can change user agent alias with `USER_AGENT_ALIAS='Windows IE 9'`.
 You can find available alias with `Mechanize::AGENT_ALIASES`.
 
+Or
+
+You can totally customize user agent with `USER_AGENT`.
+Set the value like `Mozilla/5.0 (Macintosh; ...`.
+You can find yours in http://whatsmyuseragent.com/
+
 ## Other usage and license
 
 MIT

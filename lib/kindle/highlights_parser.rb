@@ -25,7 +25,11 @@ module Kindle
       return @agent if @agent
       @agent = Mechanize.new
       @agent.redirect_ok = true
-      @agent.user_agent_alias = ENV['USER_AGENT_ALIAS'] || "Mac Safari"
+      if ENV['USER_AGENT']
+        @agent.user_agent = ENV['USER_AGENT']
+      else
+        @agent.user_agent_alias = ENV['USER_AGENT_ALIAS'] || "Mac Safari"
+      end
       @agent
     end
 
