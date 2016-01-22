@@ -22,4 +22,5 @@ Gem::Specification.new do |s|
   s.add_dependency "highline"
   s.add_dependency "mechanize"
   s.add_dependency "dotenv"
+  s.add_development_dependency "rspec"
 end
