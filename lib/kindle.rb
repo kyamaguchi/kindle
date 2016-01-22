@@ -9,6 +9,7 @@ require_relative 'kindle/highlight'
 require_relative 'kindle/highlights_parser'
 
 module Kindle
+  class SecurityQuestionFailed < StandardError; end
 
   class Highlights
 

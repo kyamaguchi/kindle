@@ -1,3 +1,5 @@
+require "highline/import"
+
 module Kindle
 
   class HighlightsParser
@@ -47,6 +49,45 @@ module Kindle
       page.forms.first.submit
     end
 
+    def secure_question_page?(page)
+      page.forms.first.name == "ap_dcq_form"
+    end
+
+    def answer_sequre_question(page)
+      find_question_answers
+      secure_form = page.forms.first
+      if @question_type == '1'
+        secure_form.dcq_question_subjective_1 = @phone_number
+      elsif  @question_type == '2'
+        secure_form.dcq_question_subjective_2 = @zip_code
+      end
+      page = secure_form.submit
+      raise Kindle::SecurityQuestionFailed, "Failed in answering security question.\n#{page.body}" if secure_question_page?(page)
+      page
+    end
+
+    def find_question_answers
+      if ENV['PHONE_NUMBER'].present?
+        @question_type = '1'
+        @phone_number = ENV['PHONE_NUMBER']
+      elsif ENV['ZIP_CODE'].present?
+        @question_type = '1'
+        @zip_code = ENV['ZIP_CODE']
+      else
+        @question_type ||= loop do
+          input = ask "Which do you answer 1. Phone number OR 2. Zip Code: "
+          break input if ['1', '2'].include?(input)
+          puts "Wrong input [#{input}]. Input 1 OR 2."
+        end
+        if @question_type == '1'
+          @phone_number = ask("Input your phone number: ")
+        elsif @question_type == '2'
+          @zip_code = ask("Input your zip code: ")
+        end
+      end
+      raise("Failed on secure question #{page.body}") unless @question_type && (@phone_number || @zip_code)
+    end
+
     def fetch_highlights(page, state)
       page = get_the_first_highlight_page_from(page, state)
       highlights = extract_highlights_from(page, state)
@@ -61,6 +102,7 @@ module Kindle
     end
 
     def get_the_first_highlight_page_from(page, state)
+      page = answer_sequre_question(page) if secure_question_page?(page)
       page = page.link_with(:text => 'Your Highlights').click
       initialize_state_with_page state, page
       page

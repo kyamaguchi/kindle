@@ -3,3 +3,6 @@
 Gemfile.lock
 pkg/*
 .env
+.byebug_history
+
+/spec/fixtures*
