@@ -59,7 +59,7 @@ module Kindle
       page.body.toutf8.include?('パスワードが正しくありません')
     end
 
-    def answer_sequre_question(page)
+    def answer_secure_question(page)
       find_question_answers
       secure_form = page.forms.first
       if @question_type == '1'
@@ -108,7 +108,7 @@ module Kindle
     end
 
     def get_the_first_highlight_page_from(page, state)
-      page = answer_sequre_question(page) if secure_question_page?(page)
+      page = answer_secure_question(page) if secure_question_page?(page)
       page = page.link_with(:text => 'Your Highlights').click
       initialize_state_with_page state, page
       page
