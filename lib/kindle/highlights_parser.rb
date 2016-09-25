@@ -18,6 +18,7 @@ module Kindle
               }
 
       page = login
+      page = answer_secure_question(page) if secure_question_page?(page)
       fetch_highlights(page, state)
     end
 
@@ -37,23 +38,37 @@ module Kindle
 
     def get_login_page
       page = agent.get(AmazonInfo.kindle_url)
-      page.link_with(href: "#{AmazonInfo.kindle_https_url}/login").click
+      page.link_with(:text => 'Your Highlights').click
     end
 
     def login
-      login_form = get_login_page.forms.first
-      login_form.email    = @login
-      login_form.password = @password
+      page = agent.get(AmazonInfo.kindle_url)
+      agent.get(page.link_with(:text => 'Your Highlights').href) do |login_page|
+        login_page = login_page.forms.first.submit # Fake submit to set cookie properly
+        login_form = login_page.forms.first
+        login_form.email    = @login
+        login_form.password = @password
 
-      page = login_form.submit
-      page.forms.first.submit
+        page = login_form.submit
+        raise Kindle::LoginFailed, "Failed in login.\n#{page.body.toutf8}" if got_wrong_password_error?(page)
+        raise Kindle::LoginFailed, "Image verification is shown.\n#{page.body.toutf8}" if got_image_verification_error?(page)
+        page
+      end
     end
 
     def secure_question_page?(page)
       page.forms.first.name == "ap_dcq_form"
     end
 
-    def answer_sequre_question(page)
+    def got_wrong_password_error?(page)
+      page.body.toutf8.include?('パスワードが正しくありません')
+    end
+
+    def got_image_verification_error?(page)
+      page.body.toutf8.include?('画像に表示されている文字')
+    end
+
+    def answer_secure_question(page)
       find_question_answers
       secure_form = page.forms.first
       if @question_type == '1'
@@ -62,7 +77,7 @@ module Kindle
         secure_form.dcq_question_subjective_2 = @zip_code
       end
       page = secure_form.submit
-      raise Kindle::SecurityQuestionFailed, "Failed in answering security question.\n#{page.body}" if secure_question_page?(page)
+      raise Kindle::SecurityQuestionFailed, "Failed in answering security question.\n#{page.body.toutf8}" if secure_question_page?(page)
       page
     end
 
@@ -85,7 +100,7 @@ module Kindle
           @zip_code = ask("Input your zip code: ")
         end
       end
-      raise("Failed on secure question #{page.body}") unless @question_type && (@phone_number || @zip_code)
+      raise("Failed on secure question #{page.body.toutf8}") unless @question_type && (@phone_number || @zip_code)
     end
 
     def fetch_highlights(page, state)
@@ -102,8 +117,6 @@ module Kindle
     end
 
     def get_the_first_highlight_page_from(page, state)
-      page = answer_sequre_question(page) if secure_question_page?(page)
-      page = page.link_with(:text => 'Your Highlights').click
       initialize_state_with_page state, page
       page
     end
