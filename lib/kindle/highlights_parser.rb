@@ -37,20 +37,26 @@ module Kindle
 
     def get_login_page
       page = agent.get(AmazonInfo.kindle_url)
-      page.link_with(href: "#{AmazonInfo.kindle_https_url}/login").click
+      page.link_with(:text => 'Your Highlights').click
     end
 
     def login
-      login_form = get_login_page.forms.first
+      login_page = get_login_page
+      login_form = login_page.forms.first
       login_form.email    = @login
       login_form.password = @password
 
       page = login_form.submit
-      page.forms.first.submit
+      raise Kindle::LoginFailed, "Failed in login.\n#{page.body}" if got_wrong_password_error?(page)
+      page
     end
 
     def secure_question_page?(page)
       page.forms.first.name == "ap_dcq_form"
+    end
+
+    def got_wrong_password_error?(page)
+      page.body.toutf8.include?('パスワードが正しくありません')
     end
 
     def answer_sequre_question(page)

@@ -1,6 +1,13 @@
 require 'spec_helper'
 
 describe Kindle, :vcr do
+  it "raise error when password is wrong" do
+    expect{
+      k = Kindle::Highlights.new(login: 'test@example.com', password: 'wrong_password', convert: false)
+      k.fetch_highlights
+    }.to raise_error(Kindle::LoginFailed)
+  end
+
   context "security question", irregular: true do
     it "fetches highlights with correct phone number" do
       k = Kindle::Highlights.new(credentials)
