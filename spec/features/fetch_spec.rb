@@ -1,6 +1,12 @@
 require 'spec_helper'
 
 describe Kindle, :vcr do
+  it "fetch annotations" do
+    k = Kindle::Highlights.new(credentials)
+    highlights = k.fetch_highlights
+    expect(highlights.size).to be > 0
+  end
+
   it "raise error when password is wrong" do
     expect{
       k = Kindle::Highlights.new(login: 'test@example.com', password: 'wrong_password', convert: false)

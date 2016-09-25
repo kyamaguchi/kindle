@@ -18,6 +18,7 @@ module Kindle
               }
 
       page = login
+      page = answer_secure_question(page) if secure_question_page?(page)
       fetch_highlights(page, state)
     end
 
@@ -41,14 +42,18 @@ module Kindle
     end
 
     def login
-      login_page = get_login_page
-      login_form = login_page.forms.first
-      login_form.email    = @login
-      login_form.password = @password
+      page = agent.get(AmazonInfo.kindle_url)
+      agent.get(page.link_with(:text => 'Your Highlights').href) do |login_page|
+        login_page = login_page.forms.first.submit # Fake submit to set cookie properly
+        login_form = login_page.forms.first
+        login_form.email    = @login
+        login_form.password = @password
 
-      page = login_form.submit
-      raise Kindle::LoginFailed, "Failed in login.\n#{page.body.toutf8}" if got_wrong_password_error?(page)
-      page
+        page = login_form.submit
+        raise Kindle::LoginFailed, "Failed in login.\n#{page.body.toutf8}" if got_wrong_password_error?(page)
+        raise Kindle::LoginFailed, "Image verification is shown.\n#{page.body.toutf8}" if got_image_verification_error?(page)
+        page
+      end
     end
 
     def secure_question_page?(page)
@@ -57,6 +62,10 @@ module Kindle
 
     def got_wrong_password_error?(page)
       page.body.toutf8.include?('パスワードが正しくありません')
+    end
+
+    def got_image_verification_error?(page)
+      page.body.toutf8.include?('画像に表示されている文字')
     end
 
     def answer_secure_question(page)
@@ -108,8 +117,6 @@ module Kindle
     end
 
     def get_the_first_highlight_page_from(page, state)
-      page = answer_secure_question(page) if secure_question_page?(page)
-      page = page.link_with(:text => 'Your Highlights').click
       initialize_state_with_page state, page
       page
     end
