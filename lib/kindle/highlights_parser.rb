@@ -47,7 +47,7 @@ module Kindle
       login_form.password = @password
 
       page = login_form.submit
-      raise Kindle::LoginFailed, "Failed in login.\n#{page.body}" if got_wrong_password_error?(page)
+      raise Kindle::LoginFailed, "Failed in login.\n#{page.body.toutf8}" if got_wrong_password_error?(page)
       page
     end
 
@@ -68,7 +68,7 @@ module Kindle
         secure_form.dcq_question_subjective_2 = @zip_code
       end
       page = secure_form.submit
-      raise Kindle::SecurityQuestionFailed, "Failed in answering security question.\n#{page.body}" if secure_question_page?(page)
+      raise Kindle::SecurityQuestionFailed, "Failed in answering security question.\n#{page.body.toutf8}" if secure_question_page?(page)
       page
     end
 
@@ -91,7 +91,7 @@ module Kindle
           @zip_code = ask("Input your zip code: ")
         end
       end
-      raise("Failed on secure question #{page.body}") unless @question_type && (@phone_number || @zip_code)
+      raise("Failed on secure question #{page.body.toutf8}") unless @question_type && (@phone_number || @zip_code)
     end
 
     def fetch_highlights(page, state)
