@@ -117,6 +117,9 @@ module Kindle
     end
 
     def get_the_first_highlight_page_from(page, state)
+      url = "#{AmazonInfo.kindle_https_url}/your_highlights"
+      puts "Getting: #{url}"
+      page = agent.get(url)
       initialize_state_with_page state, page
       page
     end
